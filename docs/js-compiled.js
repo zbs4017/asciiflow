@@ -269,7 +269,7 @@ function U(a) {
   for (var f = "", d = b.y;d <= c.y;d++) {
     var q = 0;
     for (var k = "", e = b.x;e <= c.x;e++) {
-      var l = na(a, new p(e, d)), k = k + (null == l || "\u2009" == l ? " " : l);
+      var l = na(a, new p(e, d));
 
       if (/[\u4E00-\u9FA5]/.test(l)) {
         q += 0.33;
@@ -280,6 +280,8 @@ function U(a) {
         }
         q = 0;
       }
+
+      k = k + (null == l || "\u2009" == l ? " " : l);
     }
     
     f += k.replace(/\s+$/, "") + "\n";
@@ -663,6 +665,27 @@ g.j = function(a) {
   B && (this.value = $("#freeform-tool-input").val().substr(0, 1), $("#freeform-tool-input").blur(), $("#freeform-tool-input").hide(0));
   1 == a.length && (this.value = a);
 };
+function replaceImporterText(val) {
+  return val.replace(/([\u4E00-\u9FA5]+\s+)/g, function (val) {
+    var matchResult = val.match(/[\u4E00-\u9FA5]/g)
+    var revertLen = matchResult ? Math.ceil(matchResult.length / 3) : 0;
+      console.log(revertLen, val);
+    return val.replace(/\s/g, function () {
+      if (revertLen) {
+          revertLen--;
+          return '';
+      }
+      return ' ';
+    }).replace(/[\u4E00-\u9FA5]/g, function(ch) {
+      if (revertLen) {
+        revertLen--;
+        return ch;
+      }
+
+      return ch + ' '
+    });
+  });
+}
 function Ea(a, b) {
   var c = W(a.a, b);
   a.f || (a.f = c);
@@ -718,7 +741,7 @@ function Fa(a) {
   });
   $("#import-submit-button").click(function() {
     O(a.b);
-    qa(a.b, $("#import-area").val(), W(a.a, new p(a.a.b.width / 2, a.a.b.height / 2)));
+    qa(a.b, replaceImporterText($("#import-area").val()), W(a.a, new p(a.a.b.width / 2, a.a.b.height / 2)));
     Q(a.b);
     $("#import-area").val("");
     $(".dialog").removeClass("visible");
