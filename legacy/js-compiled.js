@@ -267,9 +267,21 @@ function U(a) {
     return "";
   }
   for (var f = "", d = b.y;d <= c.y;d++) {
+    var q = 0;
     for (var k = "", e = b.x;e <= c.x;e++) {
       var l = na(a, new p(e, d)), k = k + (null == l || "\u2009" == l ? " " : l);
+
+      if (/[\u4E00-\u9FA5]/.test(l)) {
+        q += 0.5;
+        e++;
+      } else {
+        for (var m = 0; m < ~~q; m++) {
+          k += ' ';
+        }
+        q = 0;
+      }
     }
+    
     f += k.replace(/\s+$/, "") + "\n";
   }
   return f;
@@ -534,7 +546,18 @@ g.j = function() {
   var a = $("#text-tool-input").val();
   S(this.b);
   for (var b = this.b, c = this.c, e = 0, d = 0, a = n(a), f = a.next();!f.done;f = a.next()) {
-    f = f.value, "\n" == f ? (d++, e = 0) : (P(b, c.add(new p(e, d)), f), e++);
+    f = f.value;
+    if ("\n" == f) {
+      (d++, e = 0);
+      continue
+    };
+    
+    if (/[\u4E00-\u9FA5]/g.test(f)) {
+      (P(b, c.add(new p(e, d)), f), e+=2);
+      continue
+    }
+    
+    (P(b, c.add(new p(e, d)), f), e++);
   }
 };
 function Ba(a) {
