@@ -272,10 +272,10 @@ function U(a) {
       var l = na(a, new p(e, d)), k = k + (null == l || "\u2009" == l ? " " : l);
 
       if (/[\u4E00-\u9FA5]/.test(l)) {
-        q += 0.5;
+        q += 0.33;
         e++;
       } else {
-        for (var m = 0; m < ~~q; m++) {
+        for (var m = 0; m < q; m++) {
           k += ' ';
         }
         q = 0;
@@ -763,11 +763,11 @@ function Fa(a) {
   });
 }
 ;function Ga(a, b) {
-  window.gapi.auth.authorize({client_id:"125643747010-9s9n1ne2fnnuh5v967licfkt83r4vba5.apps.googleusercontent.com", scope:"https://www.googleapis.com/auth/drive", A:b}, function(c) {
-    !c || c.error || a.f || (a.f = !0, $("#drive-button").addClass("active"), window.setTimeout(function() {
-      Ha(a);
-    }, 500));
-  });
+  // window.gapi.auth.authorize({client_id:"125643747010-9s9n1ne2fnnuh5v967licfkt83r4vba5.apps.googleusercontent.com", scope:"https://www.googleapis.com/auth/drive", A:b}, function(c) {
+  //   !c || c.error || a.f || (a.f = !0, $("#drive-button").addClass("active"), window.setTimeout(function() {
+  //     Ha(a);
+  //   }, 500));
+  // });
 }
 function Ia(a) {
   window.gapi && window.gapi.auth && window.gapi.auth.authorize ? Ga(a, !0) : window.setTimeout(function() {
