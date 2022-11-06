@@ -4,6 +4,9 @@ var g, aa = "function" == typeof Object.defineProperties ? Object.defineProperty
   }
   a != Array.prototype && a != Object.prototype && (a[b] = c.value);
 }, h = "undefined" != typeof window && window === this ? this : "undefined" != typeof global && null != global ? global : this;
+var MAC_DEF_OFFSET = 3;
+var WINDOWS_DEF_OFFSET = 5;
+var offset = /windows|win32/i.test(navigator.userAgent) ? WINDOWS_DEF_OFFSET : MAC_DEF_OFFSET;
 function ba() {
   ba = function() {
   };
@@ -272,7 +275,7 @@ function U(a) {
       var l = na(a, new p(e, d));
 
       if (/[\u4E00-\u9FA5]/.test(l)) {
-        q += 0.33;
+        q += (1 / offset);
         e++;
       } else {
         for (var m = 0; m < q; m++) {
@@ -668,7 +671,7 @@ g.j = function(a) {
 function replaceImporterText(val) {
   return val.replace(/([\u4E00-\u9FA5]+\s+)/g, function (val) {
     var matchResult = val.match(/[\u4E00-\u9FA5]/g)
-    var revertLen = matchResult ? Math.ceil(matchResult.length / 3) : 0;
+    var revertLen = matchResult ? Math.ceil(matchResult.length / offset) : 0;
       console.log(revertLen, val);
     return val.replace(/\s/g, function () {
       if (revertLen) {
