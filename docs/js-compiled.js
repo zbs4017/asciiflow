@@ -7,6 +7,7 @@ var g, aa = "function" == typeof Object.defineProperties ? Object.defineProperty
 var MAC_DEF_OFFSET = 3;
 var WINDOWS_DEF_OFFSET = 5;
 var offset = /windows|win32/i.test(navigator.userAgent) ? WINDOWS_DEF_OFFSET : MAC_DEF_OFFSET;
+var updoun = Number((1 / offset).toFixed(2)) + 0.01
 function ba() {
   ba = function() {
   };
@@ -271,17 +272,20 @@ function U(a) {
   }
   for (var f = "", d = b.y;d <= c.y;d++) {
     var q = 0;
+    var m = 0;
+    var count = 0;
     for (var k = "", e = b.x;e <= c.x;e++) {
       var l = na(a, new p(e, d));
 
       if (/[\u4E00-\u9FA5]/.test(l)) {
-        q += (1 / offset);
+        q += updoun;
         e++;
       } else {
-        for (var m = 0; m < q; m++) {
+        count = Math.round(q)
+        for (m = 0; m < count; m++) {
           k += ' ';
         }
-        q = 0;
+        q -= m;
       }
 
       k = k + (null == l || "\u2009" == l ? " " : l);
@@ -669,25 +673,33 @@ g.j = function(a) {
   1 == a.length && (this.value = a);
 };
 function replaceImporterText(val) {
-  return val.replace(/([\u4E00-\u9FA5]+\s+)/g, function (val) {
-    var matchResult = val.match(/[\u4E00-\u9FA5]/g)
-    var revertLen = matchResult ? Math.ceil(matchResult.length / offset) : 0;
-      console.log(revertLen, val);
-    return val.replace(/\s/g, function () {
-      if (revertLen) {
-          revertLen--;
-          return '';
-      }
-      return ' ';
-    }).replace(/[\u4E00-\u9FA5]/g, function(ch) {
-      if (revertLen) {
-        revertLen--;
-        return ch;
-      }
-
-      return ch + ' '
-    });
-  });
+  return val
+    .replace(/\r\n/g, '\n')
+    .split('\n')
+    .map(function (line) {
+      var legacyRound = 0;
+      return line.replace(/([\u4E00-\u9FA5]+\s+)/g, function (val) {
+        var matchResult = val.match(/[\u4E00-\u9FA5]/g);
+        var currentOffset = (matchResult ? matchResult.length / offset : 0) - legacyRound;
+        var revertOffset = Math.round(currentOffset);
+        legacyRound = revertOffset - currentOffset;
+        return val.replace(/\s/g, function () {
+          if (revertOffset) {
+            revertOffset--;
+              return '';
+          }
+          return ' ';
+        }).replace(/[\u4E00-\u9FA5]/g, function(ch) {
+          if (revertOffset) {
+            revertOffset--;
+            return ch;
+          }
+    
+          return ch + ' '
+        });
+      });
+    })
+    .join('\n')
 }
 function Ea(a, b) {
   var c = W(a.a, b);
@@ -743,6 +755,7 @@ function Fa(a) {
     $(".dialog").removeClass("visible");
   });
   $("#import-submit-button").click(function() {
+    console.log(replaceImporterText($("#import-area").val()));
     O(a.b);
     qa(a.b, replaceImporterText($("#import-area").val()), W(a.a, new p(a.a.b.width / 2, a.a.b.height / 2)));
     Q(a.b);
