@@ -673,33 +673,26 @@ g.j = function(a) {
   1 == a.length && (this.value = a);
 };
 function replaceImporterText(val) {
-  return val
-    .replace(/\r\n/g, '\n')
-    .split('\n')
-    .map(function (line) {
-      var legacyRound = 0;
-      return line.replace(/([\u4E00-\u9FA5]+\s+)/g, function (val) {
-        var matchResult = val.match(/[\u4E00-\u9FA5]/g);
-        var currentOffset = (matchResult ? matchResult.length / offset : 0) - legacyRound;
-        var revertOffset = Math.round(currentOffset);
-        legacyRound = revertOffset - currentOffset;
-        return val.replace(/\s/g, function () {
-          if (revertOffset) {
-            revertOffset--;
-              return '';
-          }
-          return ' ';
-        }).replace(/[\u4E00-\u9FA5]/g, function(ch) {
-          if (revertOffset) {
-            revertOffset--;
-            return ch;
-          }
-    
-          return ch + ' '
-        });
-      });
-    })
-    .join('\n')
+  var ls = val.replace(/\r\n/g, '\n').split('\n'); // 过滤windows的换行符
+  var f = '';
+  for (var ln of ls) {
+    var q = 0;
+    for (var i = 0, l = ln.length, c = ln.charAt(i); i < l; i++, c = ln.charAt(i)) {
+      // 如果当前字符为空格并且满足回退条件
+      if (/\s/.test(c) && Math.round(q)) {
+        q--;
+      } else if (/[\u4E00-\u9FA5]/.test(c)) {
+        f += c + ' ';
+        q += updoun;
+      } else {
+        f += c
+      }
+    }
+
+    f += '\n';
+  }
+
+  return f;
 }
 function Ea(a, b) {
   var c = W(a.a, b);
