@@ -495,6 +495,9 @@ textarea {
   <button id="move-button" class="tool move-image" title="Resize/move boxes and lines"></button>
   <button id="text-button" class="tool text-image" title="Text tool"></button>
   <button id="select-button" class="tool select-image" title="Select, copy, cut and move"></button>
+  <button id="callstack-button" class="tool" title="Call Stack Tool">
+    Call Stack
+  </button>
 </div>
 
 <div id="file-tools">
@@ -622,6 +625,13 @@ addToHomescreen({
    startDelay: 6
 });
 </script>
+
+<div id="callstack-widget" style="display:none; position:fixed; z-index:100;">
+  <textarea id="callstack-input" 
+            placeholder="输入调用栈内容(Tab缩进表示层级,Enter换行)"
+            style="width:300px; height:200px;"></textarea>
+  <button id="callstack-close">关闭</button>
+</div>
 
 </body>
 </html>
